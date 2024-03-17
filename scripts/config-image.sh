@@ -215,6 +215,7 @@ EOF
     # Install the kernel
     if [[ ${LAUNCHPAD}  == "Y" ]]; then
         if [[ ${RELEASE} == "jammy" ]]; then
+            chroot ${chroot_dir} /bin/bash -c "apt-get -y install linux-rockchip-5.10"
             chroot ${chroot_dir} /bin/bash -c "depmod -a 5.10.160-rockchip"
         else
             chroot ${chroot_dir} /bin/bash -c "apt-get -y install linux-rockchip"
@@ -229,11 +230,6 @@ EOF
 
     # Clean package cache
     chroot ${chroot_dir} /bin/bash -c "apt-get -y autoremove && apt-get -y clean && apt-get -y autoclean"
-
-    # Populate the boot firmware path
-	umount -lf ${chroot_dir}/sys
-	mkdir -p ${chroot_dir}/boot/firmware
-    chroot ${chroot_dir} /bin/bash -c "FK_FORCE=yes flash-kernel"
 
     # Umount temporary API filesystems
     umount -lf ${chroot_dir}/dev/pts 2> /dev/null || true
