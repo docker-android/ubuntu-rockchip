@@ -63,7 +63,7 @@ jobs:
       - name: Build
         shell: bash
         if: ${{ github.event.inputs.launchpad == 'false' }}
-        run: sudo ./build.sh --board=orangepi-5 --release=${{ github.event.inputs.release }} --project=preinstalled-server --kernel=${{ github.event.inputs.kernel }} --kernel-only
+        run: sudo ./build.sh --board=rock-5a --release=${{ github.event.inputs.release }} --project=preinstalled-server --kernel=${{ github.event.inputs.kernel }} --kernel-only
 
       - name: Upload3
         uses: actions/upload-artifact@v4.3.1
