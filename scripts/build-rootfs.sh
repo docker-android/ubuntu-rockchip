@@ -37,6 +37,7 @@ if [[ ${SERVER_ONLY} == "Y" ]]; then
     if [[ ${RELEASE} == "noble" ]]; then
         git clone https://github.com/Joshua-Riek/ubuntu-live-build.git -b server
         cd ubuntu-live-build
+        git checkout 39721a10a3204ad5e727936588f22a3ca294f162
         sudo ./livecd-rootfs.sh && sudo ./build.sh 
         mv ./build/ubuntu-24.04-beta-preinstalled-server-arm64.rootfs.tar.xz ../
         exit 0
@@ -48,6 +49,7 @@ if [[ ${DESKTOP_ONLY} == "Y" ]]; then
         set +e
         git clone https://github.com/Joshua-Riek/ubuntu-live-build.git
         cd ubuntu-live-build
+        git checkout 39721a10a3204ad5e727936588f22a3ca294f162
         sudo ./livecd-rootfs.sh && sudo ./build.sh -d
         set -eE 
         trap 'echo Error: in $0 on line $LINENO' ERR
