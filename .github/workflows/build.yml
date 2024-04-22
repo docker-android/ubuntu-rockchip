@@ -115,7 +115,7 @@ jobs:
 
       - name: Build
         shell: bash
-        run: sudo ./build.sh --board=orangepi-5 --release=${{ github.event.inputs.release }} ${{ matrix.project == 'preinstalled-desktop' && '--desktop-only' || matrix.project == 'preinstalled-server' && '--server-only' }} --kernel=${{ github.event.inputs.kernel }} --rootfs-only
+        run: sudo ./build.sh --board=rock-5a --release=${{ github.event.inputs.release }} ${{ matrix.project == 'preinstalled-desktop' && '--desktop-only' || matrix.project == 'preinstalled-server' && '--server-only' }} --kernel=${{ github.event.inputs.kernel }} --rootfs-only
 
       - name: Upload
         uses: actions/upload-artifact@v4.3.1
