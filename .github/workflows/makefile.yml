@@ -1,0 +1,56 @@
+name: Build kernel  for rock5a
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get more disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
+      - name: Checkout code
+        if: ${{ github.event.inputs.launchpad == 'false' }}
+        uses: actions/checkout@v4
+
+      - name: Checkout LFS
+        shell: bash
+        if: ${{ github.event.inputs.launchpad == 'false' }}
+        run: git lfs fetch && git lfs checkout
+
+      - name: Install dependencies
+        shell: bash
+        if: ${{ github.event.inputs.launchpad == 'false' }}
+        run: |
+          sudo apt-get update && sudo apt-get upgrade -y
+          sudo apt-get install -y build-essential gcc-aarch64-linux-gnu bison \
+          qemu-user-static qemu-system-arm qemu-efi u-boot-tools binfmt-support \
+          debootstrap flex libssl-dev bc rsync kmod cpio xz-utils fakeroot parted \
+          udev dosfstools uuid-runtime git-lfs device-tree-compiler python2 python3 \
+          python-is-python3 fdisk bc debhelper python3-pyelftools python3-setuptools \
+          python3-distutils python3-pkg-resources swig libfdt-dev libpython3-dev dctrl-tools
+      - name: Build
+        shell: bash
+        if: ${{ github.event.inputs.launchpad == 'false' }}
+        run: sudo ./build.sh --board=rock-5a --release=jammy --project=preinstalled-server --kernel=rockchip-5.10 --kernel-only
+
+      - name: Upload3
+        uses: actions/upload-artifact@v4.3.1
+        if: ${{ github.event.inputs.launchpad == 'false' }}
+        with:
+            name: linux-rockchip
+            path: ./build/linux-*.deb
+            if-no-files-found: error
