@@ -164,6 +164,26 @@ trap 'echo Error: in $0 on line $LINENO' ERR
 locale-gen en_US.UTF-8
 update-locale LANG="en_US.UTF-8"
 
+HOST=lubancat
+# Create User
+useradd -G sudo -m -s /bin/bash cat
+passwd cat <<IEOF
+temppwd
+temppwd
+IEOF
+gpasswd -a cat video
+gpasswd -a cat audio
+passwd root <<IEOF
+root
+root
+IEOF
+# allow root login
+sed -i '/pam_securetty.so/s/^/# /g' /etc/pam.d/login
+# hostname
+echo lubancat > /etc/hostname
+# set localtime
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
 # Add the rockchip ppa
 apt-get -y update && apt-get -y install software-properties-common
 add-apt-repository -y ppa:jjriek/rockchip
